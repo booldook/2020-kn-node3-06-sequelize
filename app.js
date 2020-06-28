@@ -61,9 +61,9 @@ SeqBoard.sync({force: false});
 app.get("/create", async (req, res, next) => {
   try {
     const result = await SeqBoard.create({
-      title: "아버지를 아버지라...",
+      title: "아버지를 아버지라...3",
       writer: '홍길동',
-      content: '아버지를 아버지라...형을 형이라...',
+      content: '아버지를 아버지라...형을 형이라...3',
       rnum: 0
     });
     res.json(result);
@@ -71,7 +71,27 @@ app.get("/create", async (req, res, next) => {
   catch(e) {
     next(e);
   }
-})
+});
+
+app.get(["/list", "/list/:page"], async (req, res, next) => {
+  let page = req.params.page || 1;
+  try {
+    // SELECT id, title, writer FROM seq-boards WHERE id=3 ORDER BY title ASC, id DESC LIMIT 1, 2;
+    let result = await SeqBoard.findAll({
+      attributes: ['id', 'title', 'writer'],
+      order: [["id", "asc"], ["title", "asc"]],
+      // where: {"id": 3},
+      offset: 1,
+      limit: 2 
+    });
+    res.json(result); 
+  }
+  catch(e) {
+    next(e);
+  }
+});
+
+
 
 
 
